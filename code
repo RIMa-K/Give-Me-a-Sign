@@ -1,1 +1,273 @@
-TODO Code will be added here WTS
+/*
+  GIVE ME A SIGN
+  Project developed during the BeFantastic Colab Fellowship 2020
+  Upasana, Shayekh, Diane 
+  Diane's Model: 'https://teachablemachine.withgoogle.com/models/xhDeL_FCt/model.json'
+  */
+
+//specify model URL, make sure that it ends with /model.json
+modelURL = 'https://teachablemachine.withgoogle.com/models/xhDeL_FCt/model.json'
+
+
+//video variables
+let video;
+let classifier;
+let label = 'waiting';
+
+//audio variable
+var Mayura_audio;
+var Mookoola_audio;
+var Bhramara_audio;
+var Matsya_audio;
+var Sarpa_audio;
+var Shikhara_audio;
+
+let font,
+  fontsize = 20; // create a variable called 'font'
+
+//variables for geture .gifs
+var gestureMayura;
+var gestureMayura2;
+var gestureMookoola;
+//var gestureMookoola2;
+var gestureBhramara;
+var gestureBhramara2;
+var gestureMatsya;
+var gestureMatsya2;
+var gestureSarpa;
+var gestureSarpa2;
+var gestureShikhara;
+var gestureShikhara2;
+
+
+
+
+function preload() {
+
+  //Load the Teachable Machine model
+  classifier = ml5.imageClassifier(modelURL);
+  //Load fonts, audio files
+  font = loadFont('Fonts/AQUA.OTF');
+  //load soundformat types
+  soundFormats('mp3');
+  //load sound files
+  Mayura_audio = loadSound('Sounds/Mayura_Soundscape_DrMoonstruck.mp3');
+  Mookoola_audio = loadSound('Sounds/Mookoola_aWalk_DrMoonstruck.mp3');
+  Bhramara_audio = loadSound('Sounds/Bhramara_fractalWorld_DrMoonstruck.mp3');
+  Matsya_audio = loadSound('Sounds/Matsya_GenerativeEmotions_DrMoonstruck.mp3');
+  Sarpa_audio = loadSound('Sounds/Sarpa by Diane.mp3');
+  Shikhara_audio = loadSound('Sounds/Shikhara by Upasana.mp3');
+
+}
+
+function setup() {
+  //imageMode(CENTER);sets the position coordinates to the centre of image
+  createCanvas(720, 480); //canvas size
+  background(255); //background colour is white
+
+  //assign .gif assets to each gesture variables
+  gestureMayura2 = createImg("Assets/Prthivi_earth_quote.gif");
+  //gestureMookoola2 = createImg("Assets/Mookoola_alpha.gif");
+  gestureBhramara2 = createImg("Assets/bhramara_quote.gif");
+  gestureMatsya2 = createImg("Assets/Matsya_Fish-Quote.gif");
+  gestureSarpa2 = createImg("Assets/Sarpa_quote.gif");
+  gestureShikhara2 = createImg("Assets/Shikhara_peak_quote.gif");
+  gestureMayura = createImg("Assets/Mayura_Prthivi_-earth_MUDRA.gif");
+  gestureMookoola = createImg("Assets/Mookoola_alpha.gif");
+  gestureBhramara = createImg("Assets/bhramara_mudra.gif");
+  gestureMatsya = createImg("Assets/Matsya-Mudra.gif");
+  gestureSarpa = createImg("Assets/Sarpa_Mudra.gif");
+  gestureShikhara = createImg("Assets/Shikhara_peak_mudra.gif");
+
+
+
+
+
+  //hide all .gif assets at start
+  gestureMayura.hide();
+  gestureMookoola.hide();
+  gestureBhramara.hide();
+  gestureMatsya.hide();
+  gestureSarpa.hide();
+  gestureShikhara.hide();
+  gestureBhramara2.hide();
+  gestureMatsya2.hide();
+  gestureSarpa2.hide();
+  gestureMayura2.hide();
+  gestureShikhara2.hide();
+  /*******************
+  ..gif still to be added:
+  gestureMookoola2.hide();
+  
+  */
+
+
+  //start playing and looping sounds with the volume at 0
+  Mayura_audio.loop();
+  Mayura_audio.setVolume(0);
+
+  Mookoola_audio.loop();
+  Mookoola_audio.setVolume(0);
+
+  Bhramara_audio.loop();
+  Bhramara_audio.setVolume(0);
+
+  Matsya_audio.loop();
+  Matsya_audio.setVolume(0);
+
+  Sarpa_audio.loop();
+  Sarpa_audio.setVolume(0);
+
+  Shikhara_audio.loop();
+  Shikhara_audio.setVolume(0);
+
+
+  //assign video parameters
+  video = createCapture(VIDEO);
+  video.size = (width / 4.5, height / 3);
+  video.position(width / 1.5, height / 1.8);
+  video.hide();
+
+  //assign font parameters
+  textFont(font);
+  textSize(fontsize);
+  fill(0); //set font to black
+  stroke(1); //set thickness of font
+  textAlign(CENTER, TOP);
+
+  //Start classifying
+  classifyVideo();
+}
+
+//Create a function to classify video
+function classifyVideo() {
+  classifier.classify(video, gotResults);
+}
+
+
+function draw() {
+  //draw label and centre the font based on the width and height of the canvas
+  text(label, width / 2, height / 6);
+  /*
+  the incoming label from the teachable machine triggers a gif, affects audio track volume, changes background colour 
+  */
+  if (label == 'Mookoola') {
+    background(255, 224, 242);
+    //turn volume up on audio track
+    Mookoola_audio.setVolume(1);
+    //show .gif
+    gestureMookoola.show();
+    //position of .gif orientation from top right hand corner
+    gestureMookoola.position(0, 240);
+    //size of .gif matches size width and height of canvas
+    gestureMookoola.size(240, 240);
+    //copy of gestire in different position
+    //gestureMookoola2.show();
+    //gestureMookoola2.position(480,240);
+    //gestureMookoola2.size(240, 240);
+  } else {
+    //otherwise hide .gif
+    gestureMookoola.hide();
+    // gestureMookoola2.hide();
+    //turn volume down
+    Mookoola_audio.setVolume(0);
+  }
+
+
+  if (label == 'Matsya') {
+    background(0, 183, 224);
+    Matsya_audio.setVolume(1);
+    gestureMatsya2.show();
+    gestureMatsya2.position(0, 0);
+    gestureMatsya2.size(width, height);
+    gestureMatsya.show();
+    gestureMatsya.position(0, 0);
+    gestureMatsya.size(width, height);
+
+
+  } else {
+    gestureMatsya.hide();
+    gestureMatsya2.hide();
+    Matsya_audio.setVolume(0);
+  }
+
+  if (label == 'Mayura') {
+    background(0, 204, 255);
+    Mayura_audio.setVolume(1);
+    gestureMayura2.show();
+    gestureMayura2.position(0, 0);
+    gestureMayura2.size(width, height);
+    gestureMayura.show();
+    gestureMayura.position(0, 0);
+    gestureMayura.size(width, height);
+
+  } else {
+    gestureMayura.hide();
+    gestureMayura2.hide();
+    Mayura_audio.setVolume(0);
+  }
+
+  if (label == 'Shikhara') {
+    background(255, 115, 0);
+    Shikhara_audio.setVolume(1);
+    gestureShikhara2.show();
+    gestureShikhara2.position(0, 0);
+    gestureShikhara2.size(width, height);
+    gestureShikhara.show();
+    gestureShikhara.position(0, 0);
+    gestureShikhara.size(width, height);
+  } else {
+    gestureShikhara.hide();
+    gestureShikhara2.hide();
+    Shikhara_audio.setVolume(0);
+  }
+
+  if (label == 'Sarpa') {
+    background(0);
+    Sarpa_audio.setVolume(1);
+    gestureSarpa2.show();
+    gestureSarpa2.position(0, 0);
+    gestureSarpa2.size(width, height);
+    gestureSarpa.show();
+    gestureSarpa.position(0, 0);
+    gestureSarpa.size(width, height);
+  } else {
+    //testBG.hide();
+    gestureSarpa.hide();
+    gestureSarpa2.hide();
+    Sarpa_audio.setVolume(0);
+  }
+
+  if (label == 'Bhramara') {
+    background(255, 212, 71);
+    Bhramara_audio.setVolume(1);
+    gestureBhramara2.show();
+    gestureBhramara2.position(0, 0);
+    gestureBhramara2.size(width, height);
+    gestureBhramara.show();
+    gestureBhramara.position(0, 0);
+    gestureBhramara.size(width, height);
+
+
+
+  } else {
+    gestureBhramara.hide();
+    gestureBhramara2.hide();
+    Bhramara_audio.setVolume(0);
+  }
+
+  if (label == '_') {
+    background(255); //background is white
+  }
+  //the video must be loaded last so that it stays ontop
+  //draw video in the bottom right of the screen
+  image(video, width / 1.5, height / 1.8, width / 4.5, height / 3);
+  //image(video, width / 2.55, height / 3, width/1.5, height/1.8);
+
+}
+// STEP 3: Get the classification!
+function gotResults(error, results) {
+  label = results[0].label;
+  classifyVideo();
+  //classify video again
+}
